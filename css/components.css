@@ -43,6 +43,8 @@
     color: #333;
     transform: translateY(2px);
     box-shadow: 0 0 2px rgba(0, 0, 0, 0.1);
+    /* Instant feedback on press */
+    transition: none;
 }
 
 .key.hint {

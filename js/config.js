@@ -1,4 +1,4 @@
 /**
  * TypeFlow - Global Configuration
  */
-export const APP_VERSION = 'v1.6';
+export const APP_VERSION = 'v1.8';

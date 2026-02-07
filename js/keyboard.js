@@ -55,11 +55,15 @@ const KEY_LAYOUT = [
     ]
 ];
 
+// Key Cache Map <code, HTMLElement>
+const keyCache = new Map();
+
 export function initKeyboard(container) {
     if (!container) return;
 
     // Clear
     container.innerHTML = '';
+    keyCache.clear();
 
     // Render Rows
     KEY_LAYOUT.forEach(row => {
@@ -93,6 +97,9 @@ export function initKeyboard(container) {
             keyDiv.style.height = 'var(--key-unit)';
 
             rowDiv.appendChild(keyDiv);
+
+            // Cache it!
+            keyCache.set(key.code, keyDiv);
         });
 
         container.appendChild(rowDiv);
@@ -104,14 +111,14 @@ export function initKeyboard(container) {
 }
 
 function handleKeyDown(e) {
-    const key = document.querySelector(`.key[data-code="${e.code}"]`);
+    const key = keyCache.get(e.code);
     if (key) {
         key.classList.add('active');
     }
 }
 
 function handleKeyUp(e) {
-    const key = document.querySelector(`.key[data-code="${e.code}"]`);
+    const key = keyCache.get(e.code);
     if (key) {
         key.classList.remove('active');
     }
@@ -145,19 +152,17 @@ export function highlightKey(code) {
     // Remove old highlights
     clearHints();
 
-    if (!code) return; // If null/empty, just clear
+    if (!code) return;
 
-    // Handle codes that might be just chars (compatibility)
-    // But ideally we pass full codes. 
-    // If it's a simple char like 'a', we might need to find map. 
-    // For now assume valid codes are passed, or handle basic mapping if needed.
-
-    const keyEl = document.querySelector(`.key[data-code="${code}"]`);
+    const keyEl = keyCache.get(code); // O(1) lookup
     if (keyEl) {
         keyEl.classList.add('hint');
     }
 }
 
 export function clearHints() {
+    // Optimization: Track highlighted keys instead of querying all?
+    // For now, querySelectorAll is fast enough for just clearing, but tracking would be better.
+    // Let's stick to simple DOM clear for now to not overcomplicate state sync.
     document.querySelectorAll('.key.hint').forEach(k => k.classList.remove('hint'));
 }

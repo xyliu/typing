@@ -82,6 +82,13 @@ function startGame() {
         </div>
     `;
 
+    // Cache DOM & Dimens
+    state.rainArea = document.getElementById('rain-area');
+    state.gameHeight = state.rainArea.clientHeight || GAME_HEIGHT;
+
+    // Handle resize to update height cache
+    window.addEventListener('resize', handleResize);
+
     // Start Loop
     window.addEventListener('keydown', handleInput);
     state.gameLoopId = requestAnimationFrame(gameLoop);
@@ -101,19 +108,18 @@ function gameLoop(timestamp) {
     }
 
     // 2. Update Entities
-    const rainArea = document.getElementById('rain-area');
-    // Guard against quick level switches clearing DOM
+    const rainArea = state.rainArea; // Cached
     if (!rainArea) {
+        // Redundant safety check, but if we lost the ref somehow
         gameOver();
         return;
     }
 
-    const areaHeight = rainArea.clientHeight || GAME_HEIGHT;
+    // Cache height once per loop or rely on resize listener?
+    // Using cached `state.gameHeight` is best for performance.
+    const areaHeight = state.gameHeight;
 
-    // Use a reverse loop or copy to safely handle removals if needed,
-    // but here we only modify in handleMiss which is triggered by check
-    // We need to be careful about index shifting if we remove mid-loop.
-    // Safe approach: iterate backwards
+    // Iterate backwards
     for (let i = state.entities.length - 1; i >= 0; i--) {
         let ent = state.entities[i];
         ent.y += ent.speed * state.baseSpeed;
@@ -131,9 +137,6 @@ function gameLoop(timestamp) {
 
     // HIGHLIGHT LOGIC: Find the entity closest to bottom (largest y)
     if (state.entities.length > 0) {
-        // Sort/Find max Y. Since entities are usually ordered by spawn, 
-        // older spawns are usually at valid indices, but speed varies.
-        // Let's simple reduce.
         const target = state.entities.reduce((prev, current) => (prev.y > current.y) ? prev : current);
         highlightKey(target.key);
     } else {
@@ -202,32 +205,37 @@ function handleInput(e) {
         state.totalMisses++; // Typing error is also a miss/error for accuracy
 
         // Optional: penalty?
-        const rainArea = document.getElementById('rain-area');
         if (rainArea) {
             rainArea.classList.add('shake-sm');
             setTimeout(() => rainArea.classList.remove('shake-sm'), 200);
         }
     }
-}
+} // Closes handleInput
 
 function destroyEntity(entity, isHit) {
-    // Remove from DOM
-    if (entity.element && entity.element.parentNode) {
-        if (isHit) {
-            entity.element.classList.add('pop-out');
-            setTimeout(() => entity.element.remove(), 200);
-        } else {
-            entity.element.remove();
-        }
-    }
-
-    // Remove from State
+    // Stop tracking in game loop (remove from State FIRST)
+    // This prevents the loop from updating its transform while it's animating out
     state.entities = state.entities.filter(e => e.id !== entity.id);
 
-    if (isHit) {
-        state.score += 10;
-        state.totalHits++;
-        updateHUD();
+    if (entity.element) {
+        if (isHit) {
+            // Fix: Convert visual position from translate to top/left
+            // so animation's transform:scale doesn't conflict
+            entity.element.style.left = entity.x + 'px';
+            entity.element.style.top = entity.y + 'px';
+            entity.element.style.transform = 'none';
+
+            entity.element.classList.add('pop-out');
+            setTimeout(() => entity.element.remove(), 200);
+
+            // Update Score
+            state.score += 10;
+            state.totalHits++;
+            updateHUD();
+        } else {
+            // Just remove immediately
+            entity.element.remove();
+        }
     }
 }
 
@@ -259,12 +267,10 @@ function gameOver() {
     state.isActive = false;
     cancelAnimationFrame(state.gameLoopId);
     window.removeEventListener('keydown', handleInput);
+    window.removeEventListener('resize', handleResize); // clean up resize
 
     const elapsedSec = (Date.now() - state.startTime) / 1000;
-    // For Rain Game, WPM = (Hits) / Miutes? Or Chars / Minutes?
-    // Let's use Hits.
     const wpm = calculateWPM(state.totalHits, elapsedSec);
-    // Accuracy = Hits / (Hits + Misses (drops + typos))
     const accuracy = calculateAccuracy(state.totalMisses, state.totalHits + state.totalMisses);
 
     showResultModal(
@@ -274,4 +280,10 @@ function gameOver() {
         startGame, // Retry
         renderMenu // Menu
     );
+}
+
+function handleResize() {
+    if (state.rainArea) {
+        state.gameHeight = state.rainArea.clientHeight;
+    }
 }
