@@ -1,0 +1,114 @@
+/**
+ * Virtual Keyboard Module
+ * Handles rendering of the 75% ANSI layout.
+ */
+
+// 75% Layout Definition 
+// Rows: [F-Row, Number-Row, Q-Row, A-Row, Z-Row, Bottom-Row]
+const KEY_LAYOUT = [
+    // Row 0: ESC, F1-F12, Del
+    [
+        { code: 'Escape', label: 'esc', width: 1 },
+        { spacing: 0.5 }, // Gap
+        { code: 'F1', label: 'F1' }, { code: 'F2', label: 'F2' }, { code: 'F3', label: 'F3' }, { code: 'F4', label: 'F4' },
+        { spacing: 0.5 },
+        { code: 'F5', label: 'F5' }, { code: 'F6', label: 'F6' }, { code: 'F7', label: 'F7' }, { code: 'F8', label: 'F8' },
+        { spacing: 0.5 },
+        { code: 'F9', label: 'F9' }, { code: 'F10', label: 'F10' }, { code: 'F11', label: 'F11' }, { code: 'F12', label: 'F12' },
+        { spacing: 0.5 },
+        { code: 'Delete', label: 'del' }
+    ],
+    // Row 1: Numbers
+    [
+        { code: 'Backquote', label: '`' }, { code: 'Digit1', label: '1' }, { code: 'Digit2', label: '2' }, { code: 'Digit3', label: '3' },
+        { code: 'Digit4', label: '4' }, { code: 'Digit5', label: '5' }, { code: 'Digit6', label: '6' }, { code: 'Digit7', label: '7' },
+        { code: 'Digit8', label: '8' }, { code: 'Digit9', label: '9' }, { code: 'Digit0', label: '0' }, { code: 'Minus', label: '-' },
+        { code: 'Equal', label: '=' }, { code: 'Backspace', label: 'back', width: 2 }, { code: 'Insert', label: 'ins' }
+    ],
+    // Row 2: Tab + QWERTY
+    [
+        { code: 'Tab', label: 'tab', width: 1.5 }, { code: 'KeyQ', label: 'Q' }, { code: 'KeyW', label: 'W' }, { code: 'KeyE', label: 'E' },
+        { code: 'KeyR', label: 'R' }, { code: 'KeyT', label: 'T' }, { code: 'KeyY', label: 'Y' }, { code: 'KeyU', label: 'U' },
+        { code: 'KeyI', label: 'I' }, { code: 'KeyO', label: 'O' }, { code: 'KeyP', label: 'P' }, { code: 'BracketLeft', label: '[' },
+        { code: 'BracketRight', label: ']' }, { code: 'Backslash', label: '\\', width: 1.5 }, { code: 'PageUp', label: 'pgup' }
+    ],
+    // Row 3: Caps + ASDF
+    [
+        { code: 'CapsLock', label: 'caps', width: 1.75 }, { code: 'KeyA', label: 'A' }, { code: 'KeyS', label: 'S' }, { code: 'KeyD', label: 'D' },
+        { code: 'KeyF', label: 'F' }, { code: 'KeyG', label: 'G' }, { code: 'KeyH', label: 'H' }, { code: 'KeyJ', label: 'J' },
+        { code: 'KeyK', label: 'K' }, { code: 'KeyL', label: 'L' }, { code: 'Semicolon', label: ';' }, { code: 'Quote', label: "'" },
+        { code: 'Enter', label: 'enter', width: 2.25 }, { code: 'PageDown', label: 'pgdn' }
+    ],
+    // Row 4: Shift + ZXCV
+    [
+        { code: 'ShiftLeft', label: 'shift', width: 2.25 }, { code: 'KeyZ', label: 'Z' }, { code: 'KeyX', label: 'X' }, { code: 'KeyC', label: 'C' },
+        { code: 'KeyV', label: 'V' }, { code: 'KeyB', label: 'B' }, { code: 'KeyN', label: 'N' }, { code: 'KeyM', label: 'M' },
+        { code: 'Comma', label: ',' }, { code: 'Period', label: '.' }, { code: 'Slash', label: '/' }, { code: 'ShiftRight', label: 'shift', width: 1.75 },
+        { code: 'ArrowUp', label: '↑' }, { code: 'End', label: 'end' } // Placeholder for end/del depending on layout
+    ],
+    // Row 5: Mods + Space
+    [
+        { code: 'ControlLeft', label: 'ctrl', width: 1.25 }, { code: 'MetaLeft', label: 'win', width: 1.25 }, { code: 'AltLeft', label: 'alt', width: 1.25 },
+        { code: 'Space', label: '', width: 6.25 },
+        { code: 'AltRight', label: 'alt', width: 1.25 }, { code: 'ControlRight', label: 'ctrl', width: 1.25 },
+        { code: 'ArrowLeft', label: '←' }, { code: 'ArrowDown', label: '↓' }, { code: 'ArrowRight', label: '→' }
+    ]
+];
+
+export function initKeyboard(container) {
+    if (!container) return;
+
+    // Clear
+    container.innerHTML = '';
+
+    // Render Rows
+    KEY_LAYOUT.forEach(row => {
+        const rowDiv = document.createElement('div');
+        rowDiv.className = 'kb-row';
+        rowDiv.style.display = 'flex';
+        rowDiv.style.marginBottom = '6px';
+        rowDiv.style.justifyContent = 'space-between'; // Distribute space
+
+        row.forEach(key => {
+            if (key.spacing) {
+                const spacer = document.createElement('div');
+                spacer.style.width = (key.spacing * 50) + 'px'; // Approx
+                rowDiv.appendChild(spacer);
+                return;
+            }
+
+            const keyDiv = document.createElement('div');
+            keyDiv.className = 'key';
+            keyDiv.dataset.code = key.code;
+            keyDiv.textContent = key.label;
+
+            // Basic styling for width (assuming base unit ~50px)
+            const unit = 40; // Base key width px
+            const width = key.width || 1;
+            keyDiv.style.width = (width * unit) + 'px';
+            keyDiv.style.height = unit + 'px';
+
+            rowDiv.appendChild(keyDiv);
+        });
+
+        container.appendChild(rowDiv);
+    });
+
+    // Attach Listeners
+    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('keyup', handleKeyUp);
+}
+
+function handleKeyDown(e) {
+    const key = document.querySelector(`.key[data-code="${e.code}"]`);
+    if (key) {
+        key.classList.add('active');
+    }
+}
+
+function handleKeyUp(e) {
+    const key = document.querySelector(`.key[data-code="${e.code}"]`);
+    if (key) {
+        key.classList.remove('active');
+    }
+}

@@ -1,0 +1,64 @@
+/* TypeFlow - Components Stylesheet */
+
+/* Virtual Keyboard - 75% ANSI Layout Styles */
+#virtual-keyboard {
+    position: relative;
+    /* Using Flexbox instead of Grid for row-based layout */
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 10px;
+    background: #e0e0e0;
+    /* Case color from image */
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    width: 100%;
+    /* Remove height to fit rows naturally */
+    min-height: 300px;
+    max-width: 900px;
+}
+
+/* Key Base Style */
+.key {
+    background: #fdfdfd;
+    /* White keycaps */
+    border-radius: 4px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #333;
+    box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);
+    transition: transform 0.05s, background-color 0.1s;
+    user-select: none;
+    position: relative;
+}
+
+/* Key States */
+.key.active {
+    background-color: var(--accent-primary);
+    color: #333;
+    transform: translateY(2px);
+    box-shadow: 0 0 2px rgba(0, 0, 0, 0.1);
+}
+
+.key.hint {
+    border: 2px solid var(--accent-primary);
+}
+
+.key.error {
+    background-color: var(--error-color);
+    color: white;
+}
+
+/* Finger Hints (Optional sub-marker) */
+.key::after {
+    content: attr(data-finger);
+    position: absolute;
+    bottom: 2px;
+    right: 4px;
+    font-size: 0.6rem;
+    opacity: 0;
+    /* Hidden by default */
+}

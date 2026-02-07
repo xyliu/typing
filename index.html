@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TypeFlow - 沉浸式打字练习</title>
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/levels.css">
+    
+    <!-- Fonts (Using Google Fonts for Roboto Mono) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="app">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="logo">TypeFlow</div>
+            
+            <nav class="level-selector">
+                <button class="nav-btn active" data-level="1">基础键位</button>
+                <button class="nav-btn" data-level="2">雨滴游戏</button>
+                <button class="nav-btn" data-level="3">心流模式</button>
+            </nav>
+            
+            <div class="stats-bar">
+                <div class="stat-item">
+                    <span class="label">WPM</span>
+                    <span class="value" id="wpm-display">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="label">ACC</span>
+                    <span class="value" id="acc-display">100%</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Stage -->
+        <main class="game-stage">
+            <div id="game-container" class="level-container">
+                <!-- Generating content dynamically -->
+                <div class="welcome-screen">
+                    <h1>Ready to Type?</h1>
+                    <p>选择上方模式或按任意键开始</p>
+                </div>
+            </div>
+        </main>
+
+        <!-- Virtual Keyboard Wrapper -->
+        <footer class="keyboard-wrapper">
+            <div id="virtual-keyboard" class="keyboard-75ansi"></div>
+        </footer>
+    </div>
+
+    <!-- Application Script -->
+    <script type="module" src="js/main.js"></script>
+</body>
+</html>
