@@ -14,13 +14,28 @@
     --hl-color: #E2B714;
 
     /* Settings defaults */
-    --hint-opacity: 1;
-    /* Default intensity */
+    --hint-opacity: 0.5;
+    /* Default intensity 50% */
 
     /* Layout */
     --app-width: 1000px;
     --header-height: 60px;
     --keyboard-height: auto;
+
+    /* Keyboard Sizing (Desktop Default) */
+    --key-unit: 32px;
+    --key-spacer: 50px;
+    --key-font-size: 0.9rem;
+}
+
+@media (max-width: 1080px) {
+    :root {
+        /* Scaled down to ~80% for Tablets/iPad */
+        --key-unit: 26px;
+        --key-spacer: 40px;
+        /* Keep font size slightly smaller but readable */
+        --key-font-size: 0.85rem;
+    }
 }
 
 * {
