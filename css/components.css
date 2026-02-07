@@ -6,15 +6,15 @@
     /* Using Flexbox instead of Grid for row-based layout */
     display: flex;
     flex-direction: column;
-    gap: 6px;
-    padding: 10px;
+    gap: 3px;
+    padding: 5px;
     background: #e0e0e0;
     /* Case color from image */
     border-radius: 8px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
     width: 100%;
     /* Remove height to fit rows naturally */
-    min-height: 300px;
+    min-height: auto;
     max-width: 900px;
 }
 

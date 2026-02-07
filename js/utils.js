@@ -32,8 +32,41 @@ export function calculateWPM(charCount, timeSeconds) {
     return Math.round(words / minutes);
 }
 
-// Play Sound (Placeholder)
+// Web Audio Context
+let audioCtx = null;
+
+// Play Sound using Web Audio API (Synthesized)
 export function playSound(type) {
-    // console.log('Playing sound:', type);
-    // TODO: Implement AudioContext
+    if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    }
+
+    if (type === 'tick') {
+        // High-pitched "Click" for correct key
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.frequency.setValueAtTime(600, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(1200, audioCtx.currentTime + 0.05);
+        gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.05);
+
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.05);
+    } else if (type === 'error') {
+        // Low-pitched "Thud" for error
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(150, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(50, audioCtx.currentTime + 0.1);
+        gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.1);
+    }
 }

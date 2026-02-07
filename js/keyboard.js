@@ -83,7 +83,7 @@ export function initKeyboard(container) {
             keyDiv.textContent = key.label;
 
             // Basic styling for width (assuming base unit ~50px)
-            const unit = 40; // Base key width px
+            const unit = 32; // Base key width px
             const width = key.width || 1;
             keyDiv.style.width = (width * unit) + 'px';
             keyDiv.style.height = unit + 'px';

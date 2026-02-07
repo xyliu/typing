@@ -10,11 +10,11 @@
     --error-color: #CA4754;
     --correct-color: #D1D0C5;
     --hl-color: #E2B714;
-    
+
     /* Layout */
     --app-width: 1000px;
-    --header-height: 80px;
-    --keyboard-height: 280px;
+    --header-height: 60px;
+    --keyboard-height: auto;
 }
 
 * {
@@ -111,7 +111,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    background: rgba(0,0,0,0.1);
+    background: rgba(0, 0, 0, 0.1);
     border-radius: 8px;
     margin-bottom: 20px;
 }
@@ -133,7 +133,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    background: rgba(0,0,0,0.05);
+    background: rgba(0, 0, 0, 0.05);
     border-radius: 8px;
     padding: 10px;
 }
