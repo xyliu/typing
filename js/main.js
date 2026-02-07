@@ -32,7 +32,10 @@ document.addEventListener('DOMContentLoaded', () => {
     // 3. Setup Sound Toggle
     setupSoundToggle();
 
-    // 4. iOS Audio Unlocker
+    // 4. Setup Hint Settings
+    setupHintSettings();
+
+    // 5. iOS Audio Unlocker
     const unlockHandler = () => {
         initAudioContext();
         // Remove listeners after first successful interaction
@@ -44,6 +47,49 @@ document.addEventListener('DOMContentLoaded', () => {
     document.addEventListener('touchstart', unlockHandler);
     document.addEventListener('keydown', unlockHandler);
 });
+
+function setupHintSettings() {
+    const hintToggleBtn = document.getElementById('hint-toggle');
+    const intensityBtn = document.getElementById('intensity-btn');
+    const popover = document.getElementById('intensity-popover');
+    const intensitySlider = document.getElementById('hint-intensity');
+
+    // 1. Hint Toggle Logic
+    let hintsEnabled = true;
+    hintToggleBtn.addEventListener('click', () => {
+        hintsEnabled = !hintsEnabled;
+        if (hintsEnabled) {
+            document.body.classList.remove('no-hints');
+            hintToggleBtn.classList.remove('muted');
+            hintToggleBtn.style.opacity = '1';
+        } else {
+            document.body.classList.add('no-hints');
+            hintToggleBtn.classList.add('muted');
+            hintToggleBtn.style.opacity = '0.5';
+        }
+    });
+
+    // 2. Intensity Popover Logic
+    intensityBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        popover.classList.toggle('hidden');
+    });
+
+    // Close popover when clicking outside
+    document.addEventListener('click', (e) => {
+        if (!popover.classList.contains('hidden') &&
+            !popover.contains(e.target) &&
+            e.target !== intensityBtn) {
+            popover.classList.add('hidden');
+        }
+    });
+
+    // 3. Slider Logic
+    intensitySlider.addEventListener('input', (e) => {
+        const val = e.target.value;
+        document.documentElement.style.setProperty('--hint-opacity', val);
+    });
+}
 
 function setupSoundToggle() {
     const btn = document.getElementById('sound-toggle');

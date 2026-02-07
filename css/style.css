@@ -6,10 +6,16 @@
     --text-main: #D1D0C5;
     --text-sub: #646669;
     --accent-primary: #E2B714;
+    --accent-primary-rgb: 226, 183, 20;
+    /* For opacity calculations */
     --accent-secondary: #646669;
     --error-color: #CA4754;
     --correct-color: #D1D0C5;
     --hl-color: #E2B714;
+
+    /* Settings defaults */
+    --hint-opacity: 1;
+    /* Default intensity */
 
     /* Layout */
     --app-width: 1000px;
@@ -104,6 +110,20 @@ body {
     color: var(--accent-primary);
 }
 
+.header-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    /* Tighter gap */
+    margin-left: 20px;
+    /* Separation from Stats */
+}
+
+/* Reset margins for buttons inside the group */
+.header-controls .icon-btn {
+    margin-left: 0;
+}
+
 .icon-btn {
     background: transparent;
     border: none;
@@ -161,4 +181,58 @@ body {
     background: rgba(0, 0, 0, 0.05);
     border-radius: 8px;
     padding: 10px;
+}
+
+/* Settings Panel */
+.settings-wrapper {
+    position: relative;
+    margin-left: 20px;
+}
+
+.settings-panel {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    width: 200px;
+    background-color: #2c2e31;
+    border: 1px solid var(--text-sub);
+    border-radius: 8px;
+    padding: 15px;
+    z-index: 100;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    margin-top: 10px;
+}
+
+.settings-panel.hidden {
+    display: none;
+}
+
+.setting-item {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.setting-item:last-child {
+    margin-bottom: 0;
+}
+
+.setting-item label {
+    font-size: 0.8rem;
+    color: var(--text-main);
+    display: flex;
+    justify-content: space-between;
+}
+
+.setting-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Range Slider */
+input[type=range] {
+    width: 100%;
+    accent-color: var(--accent-primary);
 }

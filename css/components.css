@@ -44,7 +44,14 @@
 }
 
 .key.hint {
-    border: 2px solid var(--accent-primary);
+    border: 2px solid rgba(226, 183, 20, var(--hint-opacity));
+    box-shadow: 0 0 8px rgba(226, 183, 20, calc(var(--hint-opacity) * 0.6));
+}
+
+/* When hints are disabled via class */
+body.no-hints .key.hint {
+    border-color: transparent;
+    box-shadow: none;
 }
 
 .key.error {

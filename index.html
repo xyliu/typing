@@ -39,9 +39,25 @@
                 </div>
             </div>
 
-            <button id="sound-toggle" class="icon-btn" title="Toggle Sound">
-                🔊
-            </button>
+            <!-- Header Controls Group -->
+            <div class="header-controls">
+                <button id="sound-toggle" class="icon-btn" title="Toggle Sound">
+                    🔊
+                </button>
+
+                <button id="hint-toggle" class="icon-btn" title="Toggle Hints">
+                    💡
+                </button>
+
+                <div class="intensity-wrapper">
+                    <button id="intensity-btn" class="icon-btn" title="Adjust Intensity">
+                        🎚️
+                    </button>
+                    <div id="intensity-popover" class="intensity-popover hidden">
+                        <input type="range" id="hint-intensity" min="0" max="1" step="0.1" value="1">
+                    </div>
+                </div>
+            </div>
         </header>
 
         <!-- Main Stage -->
