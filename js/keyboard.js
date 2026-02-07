@@ -79,6 +79,11 @@ export function initKeyboard(container) {
 
             const keyDiv = document.createElement('div');
             keyDiv.className = 'key';
+
+            // Add finger class
+            const fingerClass = getFingerCode(key.code);
+            if (fingerClass) keyDiv.classList.add(fingerClass);
+
             keyDiv.dataset.code = key.code;
             keyDiv.textContent = key.label;
 
@@ -111,4 +116,24 @@ function handleKeyUp(e) {
     if (key) {
         key.classList.remove('active');
     }
+}
+
+// Finger Mapping Helper
+function getFingerCode(code) {
+    // Left Hand
+    if (['Escape', 'Backquote', 'Digit1', 'Tab', 'KeyQ', 'CapsLock', 'KeyA', 'ShiftLeft', 'KeyZ', 'ControlLeft', 'MetaLeft', 'AltLeft'].includes(code)) return 'finger-pinky';
+    if (['Digit2', 'KeyW', 'KeyS', 'KeyX'].includes(code)) return 'finger-ring';
+    if (['Digit3', 'KeyE', 'KeyD', 'KeyC'].includes(code)) return 'finger-middle-left';
+    if (['Digit4', 'Digit5', 'KeyR', 'KeyT', 'KeyF', 'KeyG', 'KeyV', 'KeyB'].includes(code)) return 'finger-index-left';
+
+    // Right Hand
+    if (['Digit6', 'Digit7', 'KeyY', 'KeyU', 'KeyH', 'KeyJ', 'KeyN', 'KeyM'].includes(code)) return 'finger-index-right';
+    if (['Digit8', 'KeyI', 'KeyK', 'Comma'].includes(code)) return 'finger-middle-right';
+    if (['Digit9', 'KeyO', 'KeyL', 'Period'].includes(code)) return 'finger-ring';
+    if (['Digit0', 'Minus', 'Equal', 'Backspace', 'KeyP', 'BracketLeft', 'BracketRight', 'Backslash', 'Semicolon', 'Quote', 'Enter', 'Slash', 'ShiftRight', 'ControlRight', 'AltRight'].includes(code)) return 'finger-pinky';
+
+    // Thumb
+    if (['Space'].includes(code)) return 'finger-thumb';
+
+    return '';
 }

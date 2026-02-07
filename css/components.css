@@ -62,3 +62,54 @@
     opacity: 0;
     /* Hidden by default */
 }
+
+/* Finger Zone Coloring (Top Border Strip) */
+
+/* LEFT HAND */
+.finger-index-left {
+    border-top: 4px solid #F06292;
+}
+
+/* Left Index: Pink */
+.finger-middle-left {
+    border-top: 4px solid #4DB6AC;
+}
+
+/* Left Middle: Teal */
+
+/* RIGHT HAND - CUSTOMIZED */
+.finger-index-right {
+    border-top: 4px solid #FFA726;
+}
+
+/* Right Index: Orange (Requested) */
+.finger-middle-right {
+    border-top: 4px solid #4DB6AC;
+}
+
+/* Right Middle: Teal/Cyan (Requested) */
+
+/* SHARED */
+.finger-ring {
+    border-top: 4px solid #FF9800;
+}
+
+/* Ring: Deep Orange */
+.finger-pinky {
+    border-top: 4px solid transparent;
+}
+
+/* Pinky: None */
+
+/* Thumb */
+.finger-thumb {
+    border-top: 4px solid #BDBDBD;
+}
+
+/* Thumb: Grey */
+
+.key.active {
+    background-color: var(--accent-primary);
+    /* Keep border color visible */
+    border-top-color: inherit;
+}
