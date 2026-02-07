@@ -28,6 +28,53 @@
     --key-font-size: 0.9rem;
 }
 
+/* Theme: Dark (Default) */
+:root,
+[data-theme="dark"] {
+    --bg-color: #323437;
+    --text-main: #D1D0C5;
+    --text-sub: #646669;
+    --accent-primary: #E2B714;
+    --accent-primary-rgb: 226, 183, 20;
+    --error-color: #CA4754;
+    --keyboard-bg: #e0e0e0;
+    --key-bg: #fdfdfd;
+    --key-text: #333;
+
+    /* Level 2 Specific */
+    --game-bg-start: #323437;
+    --game-bg-end: #2c2e31;
+    --char-bg-rgba: 0, 0, 0;
+    /* Yields rgba(0,0,0, 0.5) */
+    --char-text-color: #D1D0C5;
+}
+
+/* Theme: Eye Care (Warm Green) */
+[data-theme="eye-care"] {
+    --bg-color: #C7EDCC;
+    /* 豆沙绿 */
+    --text-main: #333333;
+    --text-sub: #555555;
+    --accent-primary: #8d6e63;
+    /* Warm Brown */
+    --accent-primary-rgb: 141, 110, 99;
+    --accent-secondary: #795548;
+    /* Darker Brown for borders */
+    --error-color: #d32f2f;
+    --keyboard-bg: #E0E9D8;
+    --key-bg: #F9FDF5;
+    --key-text: #2c3e50;
+
+    /* Level 2 Specific - Match Level 1 (Dark Transparent Card) */
+    /* Light Green Background */
+    --game-bg-start: #C7EDCC;
+    --game-bg-end: #A5D6A7;
+
+    /* Transparent Black Card (like Level 1) */
+    --char-bg-rgba: 0, 0, 0;
+    --char-text-color: var(--text-main);
+}
+
 @media (max-width: 1080px) {
     :root {
         /* Scaled down to ~80% for Tablets/iPad */

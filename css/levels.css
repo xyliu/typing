@@ -182,10 +182,11 @@
 .rain-area {
     flex: 1;
     position: relative;
-    background: linear-gradient(to bottom, #323437 0%, #2c2e31 100%);
+    background: linear-gradient(to bottom, var(--game-bg-start) 0%, var(--game-bg-end) 100%);
     border-radius: 0 0 8px 8px;
     overflow: hidden;
     border: 1px solid rgba(255, 255, 255, 0.05);
+    /* Could create var for this too but subtle border is okay */
 }
 
 .rain-char {
@@ -194,8 +195,9 @@
     left: 0;
     font-size: 1.5rem;
     font-weight: bold;
-    color: var(--text-main);
-    background: rgba(0, 0, 0, 0.5);
+    color: var(--char-text-color);
+    background: rgba(var(--char-bg-rgba), 0.2);
+    /* Semi-transparent dark to match Level 1 */
     padding: 5px 10px;
     border-radius: 4px;
     border: 1px solid var(--accent-secondary);

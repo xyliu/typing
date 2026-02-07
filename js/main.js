@@ -40,7 +40,10 @@ document.addEventListener('DOMContentLoaded', () => {
     // 4. Setup Hint Settings
     setupHintSettings();
 
-    // 5. iOS Audio Unlocker
+    // 5. Setup Theme Toggle
+    setupThemeToggle();
+
+    // 6. iOS Audio Unlocker
     const unlockHandler = () => {
         initAudioContext();
         // Remove listeners after first successful interaction
@@ -111,6 +114,26 @@ function setupHintSettings() {
     intensitySlider.addEventListener('input', (e) => {
         const val = parseFloat(e.target.value);
         updateHintStyle(val);
+    });
+}
+
+function setupThemeToggle() {
+    const btn = document.getElementById('theme-toggle');
+    // Load saved or default
+    let currentTheme = localStorage.getItem('tf_theme') || 'dark';
+    document.documentElement.setAttribute('data-theme', currentTheme);
+
+    btn.addEventListener('click', () => {
+        // Toggle Logic
+        currentTheme = (currentTheme === 'dark') ? 'eye-care' : 'dark';
+
+        // Apply
+        document.documentElement.setAttribute('data-theme', currentTheme);
+        localStorage.setItem('tf_theme', currentTheme);
+
+        // Optional: Notify or animate?
+        btn.classList.add('active'); // Maybe a quick pulse?
+        setTimeout(() => btn.classList.remove('active'), 200);
     });
 }
 
