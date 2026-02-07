@@ -253,3 +253,121 @@
     margin-bottom: 20px;
     color: var(--accent-secondary);
 }
+
+/* ====================
+   Level 3: Flow Mode
+   ==================== */
+
+.article-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 20px;
+    width: 100%;
+}
+
+.article-btn {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--text-sub);
+    padding: 15px;
+    text-align: left;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.article-btn:hover {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: var(--accent-primary);
+}
+
+.art-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text-main);
+    margin-bottom: 5px;
+}
+
+.art-preview {
+    font-size: 0.9rem;
+    color: var(--text-sub);
+}
+
+.level3-stage {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+}
+
+.stats-live {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    font-size: 1.1rem;
+    color: var(--accent-secondary);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    margin-bottom: 20px;
+}
+
+.stats-live b {
+    color: var(--accent-primary);
+}
+
+.text-display {
+    width: 100%;
+    flex: 1;
+    font-size: 1.5rem;
+    line-height: 1.8;
+    color: var(--text-sub);
+    overflow-y: auto;
+    white-space: pre-wrap;
+    word-break: break-word;
+    /* Hide scrollbar visually but keep functionality */
+    scrollbar-width: thin;
+    scrollbar-color: var(--text-sub) transparent;
+}
+
+/* Character States */
+.char {
+    position: relative;
+    transition: color 0.1s;
+}
+
+.char.correct {
+    color: var(--text-main);
+}
+
+.char.error {
+    color: var(--error-color);
+    text-decoration: underline;
+    background: rgba(202, 71, 84, 0.2);
+}
+
+.char.active {
+    background: var(--accent-primary);
+    color: #111;
+    /* Contrast against yellow */
+    border-radius: 2px;
+}
+
+.result-grid {
+    display: flex;
+    gap: 40px;
+    margin: 30px 0;
+    justify-content: center;
+}
+
+.res-item .label {
+    font-size: 0.9rem;
+    color: var(--text-sub);
+}
+
+.res-item .val {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--accent-primary);
+}
