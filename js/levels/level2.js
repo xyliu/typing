@@ -1,9 +1,13 @@
+const perform = window.performance || Date;
+
 /**
  * Level 2: Rain Game (Reflex Training)
  */
 import { randomInt, randomChoice, playSound } from '../utils.js';
 import { KEY_DISPLAY_MAP } from '../data.js';
 import { highlightKey, clearHints } from '../keyboard.js';
+import { calculateWPM, calculateAccuracy } from '../utils/stats.js';
+import { showResultModal } from '../ui/results.js';
 
 let state = {
     isActive: false,
@@ -15,7 +19,11 @@ let state = {
     spawnRate: 2000, // ms
     gameLoopId: null,
     baseSpeed: 1, // pixels per frame
-    difficultyMultiplier: 1
+    difficultyMultiplier: 1,
+    // Stats
+    startTime: 0,
+    totalHits: 0,
+    totalMisses: 0
 };
 
 // Config
@@ -54,6 +62,11 @@ function startGame() {
     state.baseSpeed = 1.6; // Increased start speed
     state.difficultyMultiplier = 1;
     state.lastSpawnTime = perform.now();
+
+    // Stats
+    state.startTime = Date.now();
+    state.totalHits = 0;
+    state.totalMisses = 0;
 
     // Setup UI
     state.container.innerHTML = `
@@ -97,17 +110,24 @@ function gameLoop(timestamp) {
 
     const areaHeight = rainArea.clientHeight || GAME_HEIGHT;
 
-    state.entities.forEach((ent, index) => {
+    // Use a reverse loop or copy to safely handle removals if needed,
+    // but here we only modify in handleMiss which is triggered by check
+    // We need to be careful about index shifting if we remove mid-loop.
+    // Safe approach: iterate backwards
+    for (let i = state.entities.length - 1; i >= 0; i--) {
+        let ent = state.entities[i];
         ent.y += ent.speed * state.baseSpeed;
 
         // Update DOM
-        ent.element.style.transform = `translate(${ent.x}px, ${ent.y}px)`;
+        if (ent.element) {
+            ent.element.style.transform = `translate(${ent.x}px, ${ent.y}px)`;
+        }
 
         // Check Bottom Collision
         if (ent.y > areaHeight - 40) { // Offset for visual bottom
-            handleMiss(index);
+            handleMiss(i);
         }
-    });
+    }
 
     // HIGHLIGHT LOGIC: Find the entity closest to bottom (largest y)
     if (state.entities.length > 0) {
@@ -179,6 +199,8 @@ function handleInput(e) {
     } else {
         // Miss (Wrong key)
         playSound('error');
+        state.totalMisses++; // Typing error is also a miss/error for accuracy
+
         // Optional: penalty?
         const rainArea = document.getElementById('rain-area');
         if (rainArea) {
@@ -204,6 +226,7 @@ function destroyEntity(entity, isHit) {
 
     if (isHit) {
         state.score += 10;
+        state.totalHits++;
         updateHUD();
     }
 }
@@ -211,23 +234,12 @@ function destroyEntity(entity, isHit) {
 function handleMiss(index) {
     const entity = state.entities[index];
 
-    // Remove immediately from array to avoid double counting
-    // (Note: we use filter in destroyEntity, but here we work by index in loop context, 
-    // actually safer to just mark for removal or use ID)
-
-    // Better: just call destroy logic but as "Miss"
-    // Since we are iterating, we must be careful modifying array.
-    // NOTE: In the main loop, we should iterate backwards or map if deleting.
-    // For simplicity, we'll let the loop finish updates, but mark this entity as 'dead' if needed?
-    // Actually, simply splicing here might break the loop index. 
-    // Correction: In gameLoop, use a "toRemove" list or filter after update.
-    // Refactoring gameLoop update slightly for safety:
-
-    // For this prototype, we'll just remove it and accept a potential frame skip for next entity
+    // Remove entity
     state.entities.splice(index, 1);
     if (entity.element) entity.element.remove();
 
     state.lives--;
+    state.totalMisses++; // Dropped char is a miss
     updateHUD();
     playSound('error');
 
@@ -248,18 +260,18 @@ function gameOver() {
     cancelAnimationFrame(state.gameLoopId);
     window.removeEventListener('keydown', handleInput);
 
-    state.container.innerHTML = `
-        <div class="results-screen">
-            <h2>游戏结束</h2>
-            <div class="final-score">最终得分: ${state.score}</div>
-            <button id="retry-btn" class="primary-btn">再试一次</button>
-            <button id="menu-btn" class="secondary-btn">返回菜单</button>
-        </div>
-    `;
+    const elapsedSec = (Date.now() - state.startTime) / 1000;
+    // For Rain Game, WPM = (Hits) / Miutes? Or Chars / Minutes?
+    // Let's use Hits.
+    const wpm = calculateWPM(state.totalHits, elapsedSec);
+    // Accuracy = Hits / (Hits + Misses (drops + typos))
+    const accuracy = calculateAccuracy(state.totalMisses, state.totalHits + state.totalMisses);
 
-    document.getElementById('retry-btn').addEventListener('click', startGame);
-    document.getElementById('menu-btn').addEventListener('click', renderMenu);
+    showResultModal(
+        2,
+        wpm,
+        accuracy,
+        startGame, // Retry
+        renderMenu // Menu
+    );
 }
-
-// Polyfill for perform.now if needed (browsers usually have it)
-const perform = window.performance || Date;

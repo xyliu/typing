@@ -4,20 +4,23 @@
 import { LEVEL1_LESSONS, KEY_DISPLAY_MAP } from '../data.js';
 import { randomChoice, playSound } from '../utils.js';
 import { highlightKey, clearHints } from '../keyboard.js';
+import { calculateWPM, calculateAccuracy } from '../utils/stats.js';
+import { showResultModal } from '../ui/results.js';
 
 let currentState = {
     activeLesson: null,
     queue: [],
     currentIndex: 0,
     targetKey: null,
-    correctCount: 0,
-    totalCount: 0,
+    // Stats
+    startTime: null,
+    totalTyped: 0,
+    errors: 0,
     container: null
 };
 
 // UI Elements
 let targetDisplayEl = null;
-let instructionEl = null;
 
 export function init(container) {
     currentState.container = container;
@@ -25,6 +28,14 @@ export function init(container) {
 }
 
 function renderMenu() {
+    // Force cleanup of any overlays
+    const overlays = document.querySelectorAll('.results-overlay, .game-overlay');
+    overlays.forEach(el => el.remove());
+
+    // Temporarily hide keyboard to rule it out as a blocker
+    // const keyboard = document.querySelector('.keyboard-wrapper');
+    // if (keyboard) keyboard.style.display = 'none';
+
     currentState.container.innerHTML = `
         <div class="level-menu">
             <h2>Level 1: 基础键位练习</h2>
@@ -43,7 +54,9 @@ function renderMenu() {
         btn.addEventListener('click', () => {
             const lessonId = btn.dataset.id;
             const lesson = LEVEL1_LESSONS.find(l => l.id === lessonId);
-            startLesson(lesson);
+            if (lesson) {
+                startLesson(lesson);
+            }
         });
     });
 }
@@ -53,10 +66,18 @@ function startLesson(lesson) {
     currentState.activeLesson = lesson;
     currentState.queue = [];
     currentState.currentIndex = 0;
-    currentState.correctCount = 0;
-    currentState.totalCount = 20; // Fixed session length for now
 
-    for (let i = 0; i < currentState.totalCount; i++) {
+    // Stats Reset
+    currentState.startTime = null;
+    currentState.totalTyped = 0;
+    currentState.errors = 0;
+
+    // Restore keyboard
+    const keyboard = document.querySelector('.keyboard-wrapper');
+    if (keyboard) keyboard.style.display = 'block';
+
+    // Quote generation (20 chars)
+    for (let i = 0; i < 20; i++) {
         currentState.queue.push(randomChoice(lesson.keys));
     }
 
@@ -72,7 +93,6 @@ function startLesson(lesson) {
     `;
 
     targetDisplayEl = document.getElementById('target-display');
-    instructionEl = document.getElementById('instruction-text');
 
     document.getElementById('exit-btn').addEventListener('click', () => {
         cleanup();
@@ -83,10 +103,10 @@ function startLesson(lesson) {
     window.addEventListener('keydown', handleInput);
 
     // Show first char
-    nextChar();
+    updateCharDisplay();
 }
 
-function nextChar() {
+function updateCharDisplay() {
     if (currentState.currentIndex >= currentState.queue.length) {
         finishLesson();
         return;
@@ -108,38 +128,74 @@ function handleInput(e) {
     if (!currentState.activeLesson) return;
 
     // Ignore modifiers
-    if (['Shift', 'Control', 'Alt', 'Meta', 'CapsLock'].includes(e.key)) return;
+    if (['Shift', 'Control', 'Alt', 'Meta', 'CapsLock', 'Tab'].includes(e.key)) {
+        e.preventDefault();
+        return;
+    }
+
+    // Start Timer
+    if (!currentState.startTime) {
+        currentState.startTime = Date.now();
+        document.getElementById('instruction-text').style.opacity = '0';
+    }
 
     if (e.code === currentState.targetKey) {
         // Correct
         playSound('tick');
         targetDisplayEl.classList.add('correct-anim');
-        currentState.correctCount++; // Logic check, usually simple progress
+
+        currentState.totalTyped++;
         currentState.currentIndex++;
-        setTimeout(nextChar, 100); // Brief delay for visual
+
+        // Pre-fetch next target key to avoid race condition
+        if (currentState.currentIndex < currentState.queue.length) {
+            currentState.targetKey = currentState.queue[currentState.currentIndex];
+        }
+
+        // Brief delay for visual feedback
+        setTimeout(updateCharDisplay, 100);
     } else {
         // Incorrect
         playSound('error');
         targetDisplayEl.classList.add('shake');
+        currentState.errors++;
+        currentState.totalTyped++;
         setTimeout(() => targetDisplayEl.classList.remove('shake'), 400);
     }
 }
 
+// function finishLesson() {
+//     cleanup();
+//     alert('Finished! Stats temporarily disabled for debugging.');
+//     renderMenu();
+// }
+
 function finishLesson() {
+    // Capture lesson before cleanup wipes it
+    const lessonToRetry = currentState.activeLesson;
+
     cleanup();
-    currentState.container.innerHTML = `
-        <div class="results-screen">
-            <h2>练习完成!</h2>
-            <p>Great Job!</p>
-            <button id="back-btn" class="primary-btn">返回菜单</button>
-        </div>
-    `;
-    document.getElementById('back-btn').addEventListener('click', renderMenu);
+
+    const elapsedSec = (Date.now() - currentState.startTime) / 1000;
+    const wpm = calculateWPM(currentState.totalTyped, elapsedSec);
+    const accuracy = calculateAccuracy(currentState.errors, currentState.totalTyped);
+
+    showResultModal(
+        1, // Level ID
+        wpm,
+        accuracy,
+        () => startLesson(lessonToRetry), // Retry
+        () => renderMenu() // Menu
+    );
 }
 
 function cleanup() {
+    const keyboard = document.querySelector('.keyboard-wrapper');
+    if (keyboard) keyboard.style.display = 'block';
+
     window.removeEventListener('keydown', handleInput);
     currentState.activeLesson = null;
-    // Clear hints
     clearHints();
 }
+
+

@@ -2,7 +2,9 @@
  * Level 3: Flow Mode (Sentence/Article Typing)
  */
 import { LEVEL3_ARTICLES, KEY_DISPLAY_MAP } from '../data.js';
-import { calculateWPM, playSound } from '../utils.js';
+import { playSound } from '../utils.js'; // Removed calculateWPM from utils if it exists elsewhere
+import { calculateWPM } from '../utils/stats.js';
+import { showResultModal } from '../ui/results.js';
 import { highlightKey, clearHints } from '../keyboard.js';
 
 let state = {
@@ -249,36 +251,37 @@ function finishSession() {
     window.removeEventListener('keydown', handleInput);
 
     const elapsedSec = (Date.now() - state.startTime) / 1000;
+
+    // Recalculate WPM/Accuracy using standardized utils
+    // WPM = Chars / 5 / Minutes
     const wpm = calculateWPM(state.currentArticle.content.length, elapsedSec);
 
     // Calculate final accuracy
     const correctChars = document.querySelectorAll('.char.correct').length;
     const totalChars = state.currentArticle.content.length;
+
+    // Note: state.errors might track distinct error instances, 
+    // but char.correct / totalChars is a good snapshot for final accuracy.
+    // Or we can use calculateAccuracy if we tracked total errors properly.
+    // Level 3 logic changes classes on the fly. 
+    // Let's stick to (Correct / Total) * 100 for this mode.
     const accuracy = Math.round((correctChars / totalChars) * 100);
 
-    state.container.innerHTML = `
-        <div class="results-screen">
-            <h2>文章完成!</h2>
-            <div class="result-grid">
-                <div class="res-item">
-                    <div class="label">WPM</div>
-                    <div class="val">${wpm}</div>
-                </div>
-                <div class="res-item">
-                    <div class="label">准确率</div>
-                    <div class="val">${accuracy}%</div>
-                </div>
-            </div>
-            <button id="menu-btn" class="primary-btn">返回列表</button>
-        </div>
-    `;
-
-    document.getElementById('menu-btn').addEventListener('click', renderMenu);
+    showResultModal(
+        3, // Level 3
+        wpm,
+        accuracy,
+        () => startSession(state.currentArticle), // Retry same article
+        () => renderMenu() // Back to menu
+    );
 }
 
 function exitLevel() {
+    state.isFinished = true; // Prevent further input logic
     clearInterval(state.timerInterval);
     state.isActive = false;
     window.removeEventListener('keydown', handleInput);
     renderMenu();
 }
+
+
