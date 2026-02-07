@@ -1,5 +1,14 @@
 /* Level Specific Styles */
 
+.level-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
 /* ====================
    Level 1: Key Mapping
    ==================== */
@@ -133,4 +142,114 @@
 .results-screen h2 {
     color: var(--accent-primary);
     margin-bottom: 20px;
+}
+
+/* ====================
+   Level 2: Rain Game
+   ==================== */
+
+.level2-stage {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.game-hud {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 20px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 8px 8px 0 0;
+    font-size: 1.2rem;
+    font-weight: 700;
+    z-index: 10;
+}
+
+.rain-area {
+    flex: 1;
+    position: relative;
+    background: linear-gradient(to bottom, #323437 0%, #2c2e31 100%);
+    border-radius: 0 0 8px 8px;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.rain-char {
+    position: absolute;
+    top: 0;
+    left: 0;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--text-main);
+    background: rgba(0, 0, 0, 0.5);
+    padding: 5px 10px;
+    border-radius: 4px;
+    border: 1px solid var(--accent-secondary);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    will-change: transform;
+}
+
+.pop-out {
+    animation: popOut 0.2s forwards;
+    color: var(--accent-primary);
+    border-color: var(--accent-primary);
+}
+
+@keyframes popOut {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+
+    50% {
+        transform: scale(1.5);
+        opacity: 0.8;
+    }
+
+    100% {
+        transform: scale(2);
+        opacity: 0;
+    }
+}
+
+.shake-sm {
+    animation: shake-sm 0.2s;
+}
+
+@keyframes shake-sm {
+
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+
+    25% {
+        transform: translateX(-3px);
+    }
+
+    75% {
+        transform: translateX(3px);
+    }
+}
+
+.primary-btn.large {
+    font-size: 1.5rem;
+    padding: 15px 40px;
+    margin-top: 30px;
+}
+
+.description {
+    color: var(--text-sub);
+    margin-bottom: 20px;
+}
+
+.stats-preview {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    margin-bottom: 20px;
+    color: var(--accent-secondary);
 }
