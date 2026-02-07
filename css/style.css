@@ -1,26 +1,14 @@
 /* TypeFlow - Main Stylesheet */
 
 :root {
-    /* Color Palette */
-    --bg-color: #323437;
-    --text-main: #D1D0C5;
-    --text-sub: #646669;
-    --accent-primary: #E2B714;
-    --accent-primary-rgb: 226, 183, 20;
-    /* For opacity calculations */
-    --accent-secondary: #646669;
-    --error-color: #CA4754;
-    --correct-color: #D1D0C5;
-    --hl-color: #E2B714;
-
-    /* Settings defaults */
-    --hint-opacity: 0.5;
-    /* Default intensity 50% */
-
-    /* Layout */
+    /* Layout Defaults */
     --app-width: 1000px;
     --header-height: 60px;
     --keyboard-height: auto;
+
+    /* Config Defaults */
+    --hint-opacity: 0.5;
+    /* Default intensity 50% */
 
     /* Keyboard Sizing (Desktop Default) */
     --key-unit: 32px;
@@ -29,14 +17,20 @@
 }
 
 /* Theme: Dark (Default) */
-:root,
-[data-theme="dark"] {
+[data-theme="dark"],
+:root {
+    /* Main Colors */
     --bg-color: #323437;
     --text-main: #D1D0C5;
     --text-sub: #646669;
     --accent-primary: #E2B714;
     --accent-primary-rgb: 226, 183, 20;
+    --accent-secondary: #646669;
     --error-color: #CA4754;
+    --correct-color: #D1D0C5;
+    --hl-color: #E2B714;
+
+    /* Component Colors */
     --keyboard-bg: #e0e0e0;
     --key-bg: #fdfdfd;
     --key-text: #333;
@@ -45,12 +39,13 @@
     --game-bg-start: #323437;
     --game-bg-end: #2c2e31;
     --char-bg-rgba: 0, 0, 0;
-    /* Yields rgba(0,0,0, 0.5) */
+    /* Yields rgba(0,0,0, 0.2) */
     --char-text-color: #D1D0C5;
 }
 
 /* Theme: Eye Care (Warm Green) */
 [data-theme="eye-care"] {
+    /* Main Colors */
     --bg-color: #C7EDCC;
     /* 豆沙绿 */
     --text-main: #333333;
@@ -59,8 +54,12 @@
     /* Warm Brown */
     --accent-primary-rgb: 141, 110, 99;
     --accent-secondary: #795548;
-    /* Darker Brown for borders */
+    /* Darker Brown */
     --error-color: #d32f2f;
+    --correct-color: #333333;
+    --hl-color: #8d6e63;
+
+    /* Component Colors */
     --keyboard-bg: #E0E9D8;
     --key-bg: #F9FDF5;
     --key-text: #2c3e50;
@@ -273,6 +272,155 @@ body {
     --key-font-size: calc(var(--key-unit) * 0.35);
 }
 
+
+
+/* Mobile Portrait Optimization (iPhone, etc.) */
+@media (max-width: 600px) {
+    :root {
+        --key-unit: 5.8cqw;
+        /* Maximize key size in narrow width */
+        --key-spacer: 5.8cqw;
+        --header-height: auto;
+        /* Allow header to expand */
+    }
+
+    #app {
+        padding: 10px;
+        /* Reduce padding */
+    }
+
+    .app-header {
+        flex-wrap: wrap;
+        /* Allow wrapping */
+        gap: 10px;
+        justify-content: center;
+        padding-bottom: 10px;
+        height: auto;
+    }
+
+    .logo {
+        width: 100%;
+        /* Full width logo */
+        text-align: center;
+        margin-bottom: 5px;
+    }
+
+    .level-selector {
+        order: 2;
+        /* Move to second row */
+        width: 100%;
+        justify-content: center;
+    }
+
+    .nav-btn {
+        padding: 6px 12px;
+        font-size: 0.9rem;
+    }
+
+    .header-controls {
+        order: 3;
+        /* Move to third row or with stats */
+        margin-left: 0;
+        width: 100%;
+        justify-content: center;
+        margin-top: 5px;
+    }
+
+    .stats-bar {
+        /* Hide stats on mobile? Or squash them? */
+        /* Let's keep them small */
+        display: none;
+        /* Often too cluttered, or move to game hud */
+    }
+
+    .keyboard-wrapper {
+        padding: 2px;
+        /* Minimal padding */
+    }
+}
+
+.keyboard-wrapper {
+    padding: 2px;
+    /* Minimal padding */
+}
+}
+
+/* Landscape Optimization for Mobile/Tablets */
+@media (max-height: 900px) and (orientation: landscape) {
+
+    /* Limit keyboard width so it doesn't stretch too wide */
+    .keyboard-wrapper {
+        width: 80%;
+        max-width: 850px;
+        margin: 0 auto;
+        /* Center the wrapper */
+    }
+
+    #virtual-keyboard {
+        /* Relax height constraint to 6vh (approx 1/3 screen total) */
+        /* Since container is narrower, cqw is smaller, so we boost cqw slightly to 6cqw? 
+           No, 5.5cqw of 850px is ~46px. 
+           6vh of 768px is ~46px. 
+           This yields a perfect square key approx 46px.
+        */
+        --key-unit: min(5.5cqw, 6vh);
+    }
+}
+
+/* Phone Landscape Specific (Very short height < 500px) */
+@media (max-height: 500px) and (orientation: landscape) {
+    :root {
+        --header-height: 40px;
+        /* Force small header */
+    }
+
+    .app-header {
+        padding: 0 10px;
+        margin-bottom: 5px;
+        border-bottom: 1px solid var(--text-sub);
+    }
+
+    .logo {
+        display: none;
+        /* Hide Logo to save space */
+    }
+
+    .stats-bar {
+        display: none;
+        /* Hide Stats */
+    }
+
+    .level-selector {
+        gap: 5px;
+    }
+
+    .nav-btn {
+        padding: 4px 8px;
+        font-size: 0.8rem;
+    }
+
+    .header-controls .icon-btn {
+        font-size: 1.2rem;
+        margin-left: 10px;
+    }
+
+    #app {
+        padding: 5px;
+        /* Minimal padding */
+    }
+
+    .game-stage {
+        margin-bottom: 5px;
+        /* Minimal gap */
+    }
+
+    .welcome-screen h1 {
+        font-size: 1.2rem;
+        /* Smaller welcome text */
+        margin-bottom: 5px;
+    }
+}
+
 /* Intensity Popover */
 .intensity-wrapper {
     position: relative;
@@ -326,4 +474,5 @@ input[type=range] {
     border-radius: 2px;
     outline: none;
     -webkit-appearance: none;
+    appearance: none;
 }
