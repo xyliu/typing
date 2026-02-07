@@ -72,7 +72,7 @@ export function initKeyboard(container) {
         row.forEach(key => {
             if (key.spacing) {
                 const spacer = document.createElement('div');
-                spacer.style.width = (key.spacing * 50) + 'px'; // Approx
+                spacer.style.width = `calc(var(--key-spacer) * ${key.spacing})`;
                 rowDiv.appendChild(spacer);
                 return;
             }
@@ -87,11 +87,10 @@ export function initKeyboard(container) {
             keyDiv.dataset.code = key.code;
             keyDiv.textContent = key.label;
 
-            // Basic styling for width (assuming base unit ~50px)
-            const unit = 32; // Base key width px
+            // Responsive styling using CSS variables
             const width = key.width || 1;
-            keyDiv.style.width = (width * unit) + 'px';
-            keyDiv.style.height = unit + 'px';
+            keyDiv.style.width = `calc(var(--key-unit) * ${width})`;
+            keyDiv.style.height = 'var(--key-unit)';
 
             rowDiv.appendChild(keyDiv);
         });
