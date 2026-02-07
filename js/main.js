@@ -2,7 +2,7 @@
  * TypeFlow - Main Application Entry
  */
 import { initKeyboard } from './keyboard.js';
-import { setSoundEnabled } from './utils.js';
+import { setSoundEnabled, initAudioContext } from './utils.js';
 import * as Level1 from './levels/level1.js';
 import * as Level2 from './levels/level2.js';
 import * as Level3 from './levels/level3.js';
@@ -31,6 +31,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 3. Setup Sound Toggle
     setupSoundToggle();
+
+    // 4. iOS Audio Unlocker
+    const unlockHandler = () => {
+        initAudioContext();
+        // Remove listeners after first successful interaction
+        document.removeEventListener('click', unlockHandler);
+        document.removeEventListener('touchstart', unlockHandler);
+        document.removeEventListener('keydown', unlockHandler);
+    };
+    document.addEventListener('click', unlockHandler);
+    document.addEventListener('touchstart', unlockHandler);
+    document.addEventListener('keydown', unlockHandler);
 });
 
 function setupSoundToggle() {

@@ -40,6 +40,16 @@ export function setSoundEnabled(enabled) {
     isSoundEnabled = enabled;
 }
 
+// Unlock AudioContext (Required for iOS Safari)
+export function initAudioContext() {
+    if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+    }
+}
+
 // Play Sound using Web Audio API (Synthesized)
 export function playSound(type) {
     if (!isSoundEnabled) return;
