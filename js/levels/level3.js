@@ -3,6 +3,7 @@
  */
 import { LEVEL3_ARTICLES, KEY_DISPLAY_MAP } from '../data.js';
 import { calculateWPM, playSound } from '../utils.js';
+import { highlightKey, clearHints } from '../keyboard.js';
 
 let state = {
     isActive: false,
@@ -151,15 +152,69 @@ function updateCaret() {
             currentEl.classList.add('active');
 
             // Scroll into view if needed
-            // Simple logic: if char top > container view, scroll
-            // For now, let's trust default browser scroll or CSS
-            // Actually, manual scroll is often needed for long text
             const parent = document.getElementById('text-display');
             if (currentEl.offsetTop > parent.scrollTop + parent.clientHeight - 50) {
                 parent.scrollTop = currentEl.offsetTop - 50;
             }
         }
     }
+
+    // --- KEYBOARD HIGHLIGHTING LOGIC ---
+    // Rule: "Display next input char; OR if current/prev 5 chars have error, display corrected char (Backspace)"
+
+    // Check previous 5 chars for 'error' class
+    let hasNearError = false;
+    for (let i = 1; i <= 5; i++) {
+        const idx = state.currentIndex - i;
+        if (idx >= 0) {
+            const el = document.querySelector(`.char[data-idx="${idx}"]`);
+            if (el && el.classList.contains('error')) {
+                hasNearError = true;
+                break;
+            }
+        }
+    }
+
+    if (hasNearError) {
+        highlightKey('Backspace');
+    } else {
+        // Highlight next char
+        if (state.currentIndex < state.currentArticle.content.length) {
+            const char = state.currentArticle.content[state.currentIndex];
+            // Map char to code
+            let code = getCodeFromChar(char);
+            highlightKey(code);
+        } else {
+            clearHints();
+        }
+    }
+}
+
+// Helper to map char to Code (Basic set)
+function getCodeFromChar(char) {
+    if (!char) return '';
+    if (char === ' ') return 'Space';
+    if (/[a-zA-Z]/.test(char)) return 'Key' + char.toUpperCase();
+    if (/[0-9]/.test(char)) return 'Digit' + char;
+    // Common punctuation
+    const puncMap = {
+        ',': 'Comma', '.': 'Period', '/': 'Slash', ';': 'Semicolon',
+        "'": 'Quote', '[': 'BracketLeft', ']': 'BracketRight',
+        '\\': 'Backslash', '-': 'Minus', '=': 'Equal', '`': 'Backquote'
+    };
+    if (puncMap[char]) return puncMap[char];
+
+    // Shift pairs (requires more logic to show Shift + Key, but for now just highlight base key)
+    const shiftMap = {
+        '!': 'Digit1', '@': 'Digit2', '#': 'Digit3', '$': 'Digit4', '%': 'Digit5',
+        '^': 'Digit6', '&': 'Digit7', '*': 'Digit8', '(': 'Digit9', ')': 'Digit0',
+        '_': 'Minus', '+': 'Equal', '{': 'BracketLeft', '}': 'BracketRight',
+        '|': 'Backslash', ':': 'Semicolon', '"': 'Quote', '<': 'Comma', '>': 'Period', '?': 'Slash',
+        '~': 'Backquote'
+    };
+    if (shiftMap[char]) return shiftMap[char];
+
+    return '';
 }
 
 function updateStats() {

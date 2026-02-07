@@ -3,6 +3,7 @@
  */
 import { randomInt, randomChoice, playSound } from '../utils.js';
 import { KEY_DISPLAY_MAP } from '../data.js';
+import { highlightKey, clearHints } from '../keyboard.js';
 
 let state = {
     isActive: false,
@@ -107,6 +108,17 @@ function gameLoop(timestamp) {
             handleMiss(index);
         }
     });
+
+    // HIGHLIGHT LOGIC: Find the entity closest to bottom (largest y)
+    if (state.entities.length > 0) {
+        // Sort/Find max Y. Since entities are usually ordered by spawn, 
+        // older spawns are usually at valid indices, but speed varies.
+        // Let's simple reduce.
+        const target = state.entities.reduce((prev, current) => (prev.y > current.y) ? prev : current);
+        highlightKey(target.key);
+    } else {
+        clearHints();
+    }
 
     state.gameLoopId = requestAnimationFrame(gameLoop);
 }

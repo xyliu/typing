@@ -3,6 +3,7 @@
  */
 import { LEVEL1_LESSONS, KEY_DISPLAY_MAP } from '../data.js';
 import { randomChoice, playSound } from '../utils.js';
+import { highlightKey, clearHints } from '../keyboard.js';
 
 let currentState = {
     activeLesson: null,
@@ -124,17 +125,6 @@ function handleInput(e) {
     }
 }
 
-function highlightKey(keyCode) {
-    // Remove old highlights
-    document.querySelectorAll('.key.hint').forEach(k => k.classList.remove('hint'));
-
-    // Add new
-    const keyEl = document.querySelector(`.key[data-code="${keyCode}"]`);
-    if (keyEl) {
-        keyEl.classList.add('hint');
-    }
-}
-
 function finishLesson() {
     cleanup();
     currentState.container.innerHTML = `
@@ -151,5 +141,5 @@ function cleanup() {
     window.removeEventListener('keydown', handleInput);
     currentState.activeLesson = null;
     // Clear hints
-    document.querySelectorAll('.key.hint').forEach(k => k.classList.remove('hint'));
+    clearHints();
 }

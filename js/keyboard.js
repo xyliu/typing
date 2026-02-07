@@ -137,3 +137,28 @@ function getFingerCode(code) {
 
     return '';
 }
+
+/**
+ * Highlights a specific key on the virtual keyboard.
+ * @param {string} code - The DOM KeyboardEvent.code (e.g., 'KeyA', 'Space')
+ */
+export function highlightKey(code) {
+    // Remove old highlights
+    clearHints();
+
+    if (!code) return; // If null/empty, just clear
+
+    // Handle codes that might be just chars (compatibility)
+    // But ideally we pass full codes. 
+    // If it's a simple char like 'a', we might need to find map. 
+    // For now assume valid codes are passed, or handle basic mapping if needed.
+
+    const keyEl = document.querySelector(`.key[data-code="${code}"]`);
+    if (keyEl) {
+        keyEl.classList.add('hint');
+    }
+}
+
+export function clearHints() {
+    document.querySelectorAll('.key.hint').forEach(k => k.classList.remove('hint'));
+}
