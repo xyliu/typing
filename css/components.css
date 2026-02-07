@@ -67,34 +67,34 @@
 
 /* LEFT HAND */
 .finger-index-left {
-    border-top: 4px solid #F06292;
+    border-top: 4px solid #F48FB1;
 }
 
-/* Left Index: Pink */
+/* Left Index: Lighter Pink */
 .finger-middle-left {
-    border-top: 4px solid #4DB6AC;
+    border-top: 4px solid #80CBC4;
 }
 
-/* Left Middle: Teal */
+/* Left Middle: Lighter Teal */
 
 /* RIGHT HAND - CUSTOMIZED */
 .finger-index-right {
-    border-top: 4px solid #FFA726;
+    border-top: 4px solid #FFCC80;
 }
 
-/* Right Index: Orange (Requested) */
+/* Right Index: Lighter Orange */
 .finger-middle-right {
-    border-top: 4px solid #4DB6AC;
+    border-top: 4px solid #80CBC4;
 }
 
-/* Right Middle: Teal/Cyan (Requested) */
+/* Right Middle: Lighter Teal */
 
 /* SHARED */
 .finger-ring {
-    border-top: 4px solid #FF9800;
+    border-top: 4px solid #FFB74D;
 }
 
-/* Ring: Deep Orange */
+/* Ring: Lighter Deep Orange */
 .finger-pinky {
     border-top: 4px solid transparent;
 }
@@ -103,10 +103,10 @@
 
 /* Thumb */
 .finger-thumb {
-    border-top: 4px solid #BDBDBD;
+    border-top: 4px solid #E0E0E0;
 }
 
-/* Thumb: Grey */
+/* Thumb: Light Grey */
 
 .key.active {
     background-color: var(--accent-primary);
