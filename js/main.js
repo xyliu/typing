@@ -2,6 +2,7 @@
  * TypeFlow - Main Application Entry
  */
 import { initKeyboard } from './keyboard.js';
+import { setSoundEnabled } from './utils.js';
 import * as Level1 from './levels/level1.js';
 import * as Level2 from './levels/level2.js';
 import * as Level3 from './levels/level3.js';
@@ -10,6 +11,9 @@ import * as Level3 from './levels/level3.js';
 const State = {
     currentLevel: null,
     isGameActive: false,
+    settings: {
+        soundEnabled: true
+    },
     stats: {
         wpm: 0,
         accuracy: 100
@@ -18,13 +22,41 @@ const State = {
 
 document.addEventListener('DOMContentLoaded', () => {
     console.log('TypeFlow Initializing...');
-    
+
     // 1. Initialize Virtual Keyboard
     initKeyboard(document.getElementById('virtual-keyboard'));
 
     // 2. Setup Navigation
     setupNavigation();
+
+    // 3. Setup Sound Toggle
+    setupSoundToggle();
 });
+
+function setupSoundToggle() {
+    const btn = document.getElementById('sound-toggle');
+
+    // update initial UI
+    updateSoundBtnUI(btn);
+
+    btn.addEventListener('click', () => {
+        State.settings.soundEnabled = !State.settings.soundEnabled;
+        setSoundEnabled(State.settings.soundEnabled);
+        updateSoundBtnUI(btn);
+    });
+}
+
+function updateSoundBtnUI(btn) {
+    if (State.settings.soundEnabled) {
+        btn.textContent = '🔊';
+        btn.classList.remove('muted');
+        btn.title = "Mute Sound";
+    } else {
+        btn.textContent = '🔇';
+        btn.classList.add('muted');
+        btn.title = "Enable Sound";
+    }
+}
 
 function setupNavigation() {
     const buttons = document.querySelectorAll('.nav-btn');
@@ -33,7 +65,7 @@ function setupNavigation() {
             // UI Update
             buttons.forEach(b => b.classList.remove('active'));
             e.target.classList.add('active');
-            
+
             // Logic Update
             const level = parseInt(e.target.dataset.level);
             switchLevel(level);
@@ -44,7 +76,7 @@ function setupNavigation() {
 function switchLevel(levelIndex) {
     console.log(`Switching to Level ${levelIndex}`);
     State.currentLevel = levelIndex;
-    
+
     // Clear Stage
     const stage = document.getElementById('game-container');
     stage.innerHTML = '';

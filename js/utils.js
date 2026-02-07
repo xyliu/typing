@@ -34,9 +34,16 @@ export function calculateWPM(charCount, timeSeconds) {
 
 // Web Audio Context
 let audioCtx = null;
+let isSoundEnabled = true;
+
+export function setSoundEnabled(enabled) {
+    isSoundEnabled = enabled;
+}
 
 // Play Sound using Web Audio API (Synthesized)
 export function playSound(type) {
+    if (!isSoundEnabled) return;
+
     if (!audioCtx) {
         audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     }
