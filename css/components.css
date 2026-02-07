@@ -44,8 +44,21 @@
 }
 
 .key.hint {
+    /* Default: Border Highlight (Intensity <= 50%) */
     border: 2px solid rgba(226, 183, 20, var(--hint-opacity));
     box-shadow: 0 0 8px rgba(226, 183, 20, calc(var(--hint-opacity) * 0.6));
+    transition: background-color 0.2s, border-color 0.2s, box-shadow 0.2s;
+}
+
+/* Fill Mode (Intensity > 50%) */
+body.hint-mode-fill .key.hint {
+    background-color: rgba(226, 183, 20, var(--hint-opacity));
+    border-color: transparent;
+    /* Hide border in fill mode */
+    box-shadow: none;
+    color: #fff;
+    /* Ensure text is readable on yellow */
+    font-weight: bold;
 }
 
 /* When hints are disabled via class */

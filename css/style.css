@@ -183,56 +183,57 @@ body {
     padding: 10px;
 }
 
-/* Settings Panel */
-.settings-wrapper {
+/* Intensity Popover */
+.intensity-wrapper {
     position: relative;
-    margin-left: 20px;
+    display: flex;
+    /* For alignment */
+    align-items: center;
 }
 
-.settings-panel {
+.intensity-popover {
     position: absolute;
-    top: 100%;
-    right: 0;
-    width: 200px;
+    right: 120%;
+    /* Position to the LEFT of the button */
+    top: 50%;
+    transform: translateY(-50%);
+    width: 120px;
     background-color: #2c2e31;
     border: 1px solid var(--text-sub);
-    border-radius: 8px;
-    padding: 15px;
+    border-radius: 20px;
+    padding: 8px 12px;
     z-index: 100;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-    margin-top: 10px;
-}
-
-.settings-panel.hidden {
-    display: none;
-}
-
-.setting-item {
     display: flex;
-    flex-direction: column;
-    gap: 8px;
-    margin-bottom: 12px;
-}
-
-.setting-item:last-child {
-    margin-bottom: 0;
-}
-
-.setting-item label {
-    font-size: 0.8rem;
-    color: var(--text-main);
-    display: flex;
-    justify-content: space-between;
-}
-
-.setting-row {
-    display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
+    /* transition: opacity 0.2s, transform 0.2s; */
+}
+
+/* Arrow pointing RIGHT (towards the button) */
+.intensity-popover::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    right: -6px;
+    /* Arrow on the right edge */
+    transform: translateY(-50%);
+    border-width: 6px 0 6px 6px;
+    border-style: solid;
+    border-color: transparent transparent transparent #2c2e31;
+}
+
+.intensity-popover.hidden {
+    display: none;
+    /* Alternatively use opacity: 0; pointer-events: none; for animation */
 }
 
 /* Range Slider */
 input[type=range] {
     width: 100%;
-    accent-color: var(--accent-primary);
+    height: 4px;
+    background: var(--text-sub);
+    border-radius: 2px;
+    outline: none;
+    -webkit-appearance: none;
 }

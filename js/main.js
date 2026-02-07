@@ -85,9 +85,27 @@ function setupHintSettings() {
     });
 
     // 3. Slider Logic
-    intensitySlider.addEventListener('input', (e) => {
-        const val = e.target.value;
+    const updateHintStyle = (val) => {
+        // Toggle Fill Mode class if > 50%
+        if (val > 0.5) {
+            document.body.classList.add('hint-mode-fill');
+        } else {
+            document.body.classList.remove('hint-mode-fill');
+        }
+
+        // Update Opacity Variable
+        // We can map this if needed, but linear mapping on slider seems fine for now.
+        // For Border Mode: 0.1 to 0.5 -> We want visible borders.
+        // For Fill Mode: 0.51 to 1.0 -> We want visible fill.
         document.documentElement.style.setProperty('--hint-opacity', val);
+    };
+
+    // Initialize with default/start value
+    updateHintStyle(intensitySlider.value);
+
+    intensitySlider.addEventListener('input', (e) => {
+        const val = parseFloat(e.target.value);
+        updateHintStyle(val);
     });
 }
 
