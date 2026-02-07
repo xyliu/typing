@@ -259,13 +259,18 @@ body {
 
 #virtual-keyboard {
     /* Responsive Unit Calculation */
-    /* 15.5 units max width approx. Let's say 17 to be safe with gaps */
-    /* 100 / 17 = ~5.8. Use 4.8cqw to leave room for padding inside the keyboard container */
-    --key-unit: 4.8cqw;
-    --key-spacer: 4.8cqw;
+    /* Width Constraint: Fit ~16 units horizontally -> 5.4cqw */
+    /* Height Constraint: Max 1/3 screen height (33vh). 
+       Keyboard is approx 5.5 units high (5 rows + gaps). 
+       33vh / 5.5 = 6vh. 
+       We use 5.5vh to be safe and include padding.
+    */
+    --key-unit: min(5.4cqw, 5.5vh);
+    --key-spacer: var(--key-unit);
 
-    /* Dynamic Font Size */
-    --key-font-size: clamp(0.6rem, 1.8cqw, 1.1rem);
+    /* Dynamic Font Size linked to Key Unit */
+    /* 1 unit is approx 50-60px on desktop. 0.35 * unit gives ~20px */
+    --key-font-size: calc(var(--key-unit) * 0.35);
 }
 
 /* Intensity Popover */
