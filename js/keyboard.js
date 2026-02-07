@@ -66,7 +66,7 @@ export function initKeyboard(container) {
         const rowDiv = document.createElement('div');
         rowDiv.className = 'kb-row';
         rowDiv.style.display = 'flex';
-        rowDiv.style.marginBottom = '6px';
+        rowDiv.style.marginBottom = '2px';
         rowDiv.style.justifyContent = 'space-between'; // Distribute space
 
         row.forEach(key => {

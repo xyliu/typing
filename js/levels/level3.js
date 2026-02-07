@@ -23,6 +23,10 @@ export function init(container) {
 }
 
 function renderMenu() {
+    // Hide keyboard to give more space for article list
+    const kb = document.querySelector('.keyboard-wrapper');
+    if (kb) kb.classList.add('hidden-keyboard');
+
     state.container.innerHTML = `
         <div class="level-menu">
             <h2>Level 3: 心流模式</h2>
@@ -55,6 +59,10 @@ function startSession(article) {
     state.errors = [];
     state.startTime = null; // Start on first keypress
     state.isFinished = false;
+
+    // Show keyboard for typing
+    const kb = document.querySelector('.keyboard-wrapper');
+    if (kb) kb.classList.remove('hidden-keyboard');
 
     // Render Stage
     state.container.innerHTML = `

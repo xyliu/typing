@@ -13,6 +13,8 @@
     /* Keyboard Sizing (Desktop Default) */
     --key-unit: 32px;
     --key-spacer: 50px;
+    --key-gap-y: 0.15cqw;
+    /* Vertical gap between rows */
     --key-font-size: 0.9rem;
 }
 
@@ -256,6 +258,10 @@ body {
     container-name: keyboard;
 }
 
+.hidden-keyboard {
+    display: none !important;
+}
+
 #virtual-keyboard {
     /* Responsive Unit Calculation */
     /* Width Constraint: Fit ~16 units horizontally -> 5.4cqw */
@@ -363,7 +369,9 @@ body {
            6vh of 768px is ~46px. 
            This yields a perfect square key approx 46px.
         */
-        --key-unit: min(5.5cqw, 6vh);
+        --key-unit: min(5.5cqw, 5vh);
+        --key-gap-y: 0.15cqw;
+        /* Reduce vertical gap by ~40% for tighter look */
     }
 }
 

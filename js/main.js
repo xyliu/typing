@@ -185,6 +185,10 @@ function switchLevel(levelIndex) {
     const stage = document.getElementById('game-container');
     stage.innerHTML = '';
 
+    // Reset Keyboard Visibility
+    document.querySelector('.keyboard-wrapper').classList.remove('hidden-keyboard');
+
+
     // Load Level Logic
     if (levelIndex === 1) Level1.init(stage);
     else if (levelIndex === 2) Level2.init(stage);
