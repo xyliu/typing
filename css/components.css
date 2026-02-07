@@ -5,9 +5,11 @@
     position: relative;
     /* Using Flexbox instead of Grid for row-based layout */
     display: flex;
+    display: flex;
     flex-direction: column;
-    gap: 3px;
-    padding: 5px;
+    gap: 0.25cqw;
+    /* Dynamic, tighter gap */
+    padding: 0.5cqw;
     background: #e0e0e0;
     /* Case color from image */
     border-radius: 8px;

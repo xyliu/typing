@@ -7,6 +7,8 @@ import * as Level1 from './levels/level1.js';
 import * as Level2 from './levels/level2.js';
 import * as Level3 from './levels/level3.js';
 
+import { APP_VERSION } from './config.js';
+
 // Global State
 const State = {
     currentLevel: null,
@@ -22,6 +24,9 @@ const State = {
 
 document.addEventListener('DOMContentLoaded', () => {
     console.log('TypeFlow Initializing...');
+
+    // 0. Set Version
+    document.getElementById('app-version').textContent = APP_VERSION;
 
     // 1. Initialize Virtual Keyboard
     initKeyboard(document.getElementById('virtual-keyboard'));

@@ -81,6 +81,14 @@ body {
     letter-spacing: -1px;
 }
 
+.logo small {
+    font-size: 0.8rem;
+    font-weight: 400;
+    color: var(--text-sub);
+    letter-spacing: 0;
+    margin-left: 5px;
+}
+
 .level-selector {
     display: flex;
     gap: 15px;
@@ -196,6 +204,21 @@ body {
     background: rgba(0, 0, 0, 0.05);
     border-radius: 8px;
     padding: 10px;
+
+    /* Enable Container Queries */
+    container-type: inline-size;
+    container-name: keyboard;
+}
+
+#virtual-keyboard {
+    /* Responsive Unit Calculation */
+    /* 15.5 units max width approx. Let's say 17 to be safe with gaps */
+    /* 100 / 17 = ~5.8. Use 4.8cqw to leave room for padding inside the keyboard container */
+    --key-unit: 4.8cqw;
+    --key-spacer: 4.8cqw;
+
+    /* Dynamic Font Size */
+    --key-font-size: clamp(0.6rem, 1.8cqw, 1.1rem);
 }
 
 /* Intensity Popover */
