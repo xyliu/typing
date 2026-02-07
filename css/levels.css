@@ -7,6 +7,8 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    overflow: hidden;
+    /* Prevent parent scroll */
 }
 
 /* ====================
@@ -17,6 +19,15 @@
     text-align: center;
     width: 100%;
     max-width: 800px;
+    flex: 1;
+    /* Flex grow */
+    min-height: 0;
+    /* Allow shrinking */
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    overflow: hidden;
+    /* Contain children */
 }
 
 .level-menu h2 {
@@ -258,12 +269,21 @@
    Level 3: Flow Mode
    ==================== */
 
+
+
 .article-list {
     display: flex;
     flex-direction: column;
     gap: 15px;
     margin-top: 20px;
     width: 100%;
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    padding-right: 10px;
+    /* Custom Scrollbar */
+    scrollbar-width: thin;
+    scrollbar-color: var(--text-sub) transparent;
 }
 
 .article-btn {

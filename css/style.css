@@ -135,6 +135,10 @@ body {
     background: rgba(0, 0, 0, 0.1);
     border-radius: 8px;
     margin-bottom: 20px;
+    min-height: 0;
+    /* Critical for flex scrolling */
+    overflow: hidden;
+    /* Prevent spillover */
 }
 
 .welcome-screen {
